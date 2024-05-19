@@ -13,7 +13,7 @@ const onClose = (result: boolean) => {
 <template>
   <div class="modal">
     <div class="content">
-      <h1>Подтвердить сохранение изменений</h1>
+      <h1>Подтвердить выход</h1>
       <div class="button">
         <button @click="onClose(true)">Подтвердить</button>
         <button @click="onClose(false)">Отменить</button>
@@ -38,7 +38,7 @@ h1 {
   padding-bottom: 20px; /* отступ снизу */
   margin: 0%; /* нет внутренних отступов */
   color: #fff; /* цвет текста */
-  align-items: center; /* текст по центру по вертикали */
+  align-items: center; /* текст по центру по вертикали*/
 }
 
 .button {
