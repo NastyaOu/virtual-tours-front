@@ -2,7 +2,9 @@
 import { useRouter } from 'vue-router'
 
 interface Props {
+  name: string
   link: string
+  imgSrc: string
 }
 
 const props = defineProps<Props>()
@@ -15,9 +17,9 @@ const onClick = () => {
 </script>
 
 <template>
-  <div class="wrap">
+  <div class="wrap" :style="`background-image: url('${imgSrc}');`">
     <div class="content wrap-content">
-      <h1>МБУ ДО ДШИ им. Г.И. Бабко</h1>
+      <h1>{{ name }}</h1>
       <button @click="onClick">Посетить</button>
     </div>
   </div>
@@ -25,7 +27,7 @@ const onClick = () => {
 
 <style scoped>
 .wrap {
-  background: url('./src/assets/school.png'); /* фон */
+  /* фон */
   background-size: cover;
   background-position: 50% 50%;
   padding: 240px 0px; /* отступы */

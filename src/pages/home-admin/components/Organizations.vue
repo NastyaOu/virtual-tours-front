@@ -1,15 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ConfirmDelBox from './../../shared/ConfirmDelBox.vue'
+import type { IOrganization } from '@/interfaces/Organization'
+import { deleteOrganization, getOrganizations } from '@/services/organization-service'
+
+const organizations = ref<IOrganization[]>()
+
+onMounted(() => {
+  getOrganizations().then((res) => {
+    organizations.value = res
+  })
+})
 
 const isDelBoxOpen = ref(false)
+const deleteCandidate = ref(0)
 
-const onDelBtnClick = () => {
+const onDelBtnClick = (id: number) => {
+  deleteCandidate.value = id
   isDelBoxOpen.value = true
 }
 
 const onDelBoxClose = (result: boolean) => {
   isDelBoxOpen.value = false
+
+  if (result) deleteOrganization(deleteCandidate.value)
+  else deleteCandidate.value = 0
 }
 </script>
 
@@ -18,14 +33,14 @@ const onDelBoxClose = (result: boolean) => {
     <div class="content">
       <h1>Организации</h1>
       <div class="list">
-        <div class="item">
-          <RouterLink to="organizations/1/locations">
-            <p>МБУ ДО ДШИ им. Г.И. Бабко</p>
+        <div class="item" v-for="organization of organizations" :key="organization.idOrganization">
+          <RouterLink :to="`organizations/${organization.idOrganization}/locations`">
+            <p>{{ organization.name }}</p>
           </RouterLink>
-          <RouterLink to="organizations/1">
+          <RouterLink :to="`organizations/${organization.idOrganization}`">
             <img src="/src/assets/edit.svg" />
           </RouterLink>
-          <img src="/src/assets/del.svg" @click="onDelBtnClick" />
+          <img src="/src/assets/del.svg" @click="onDelBtnClick(organization.idOrganization)" />
         </div>
       </div>
       <RouterLink to="organizations/new">

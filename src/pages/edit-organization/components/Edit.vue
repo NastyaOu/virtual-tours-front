@@ -1,9 +1,33 @@
 <script setup lang="ts">
 import ConfirmSaveAddBox from '@/pages/shared/ConfirmSaveAddBox.vue'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { getOrganization, updateOrganization } from '@/services/organization-service'
 
 const router = useRouter()
+
+const name = ref('')
+const description = ref('')
+const history = ref([''])
+const fileInput = ref()
+
+const onAddHistoryBtnClick = () => {
+  history.value.push('')
+}
+
+const onDelHistoryBtnClick = (index: number) => {
+  history.value.splice(index, 1)
+}
+
+const route = useRoute()
+
+onMounted(() => {
+  getOrganization(Number(route.params.id)).then((res) => {
+    name.value = res.name
+    description.value = res.description
+    history.value = res.history
+  })
+})
 
 const isSaveAddBoxOpen = ref(false)
 
@@ -17,6 +41,20 @@ const onCancelBtnClick = () => {
 
 const onSaveAddBoxClose = (result: boolean) => {
   isSaveAddBoxOpen.value = false
+
+  if (!result) return
+
+  const formData = new FormData()
+
+  formData.append('name', name.value)
+  formData.append('description', description.value)
+  formData.append('history', JSON.stringify(history.value))
+
+  if (fileInput.value.files[0]) {
+    formData.append('image', fileInput.value.files[0])
+  }
+
+  updateOrganization(Number(route.params.id), formData)
 }
 </script>
 
@@ -27,31 +65,31 @@ const onSaveAddBoxClose = (result: boolean) => {
       <div class="list">
         <div class="item">
           <label>Название организации</label>
-          <input type="text" />
+          <input type="text" v-model="name" />
         </div>
         <div class="item">
           <label>Описание организации</label>
-          <input type="text" />
+          <input type="text" v-model="description" />
         </div>
         <div class="item">
           <label>История организации</label>
           <div class="items">
-            <input type="text" />
-            <div class="item">
-              <input type="text" />
-              <img src="/src/assets/close.svg" />
+            <input type="text" v-model="history[0]" />
+            <div v-for="(historyEl, index) of history.slice(1, history.length)" class="item">
+              <input type="text" v-model="history[index + 1]" />
+              <img src="/src/assets/close.svg" @click="onDelHistoryBtnClick(index + 1)" />
             </div>
           </div>
+        </div>
+        <div class="btn">
+          <img src="/src/assets/add.svg" @click="onAddHistoryBtnClick" />
         </div>
         <div class="item">
           <label>Изображение</label>
           <div class="item">
-            <input type="file" />
+            <input ref="fileInput" type="file" />
             <img src="/src/assets/close.svg" />
           </div>
-        </div>
-        <div class="btn">
-          <img src="/src/assets/add.svg" />
         </div>
       </div>
       <div class="button">
@@ -133,18 +171,23 @@ input {
   /* отступ между элементами */
 }
 
-.item {
-  display: flex;
-  /* элементы в блок */
-  flex-direction: row;
-  /* элементы в строку */
-  gap: 5px;
-  /* отступ между элементами */
+.items .item {
+  display: flex; /* элементы в блок */
+  flex-direction: row; /* элементы в строку */
+  gap: 5px; /* отступ между элементами */
+}
+
+.items .item > img {
+  cursor: pointer;
 }
 
 .btn {
   padding-left: 250px;
   /* отступ слева */
+}
+
+.btn > img {
+  cursor: pointer;
 }
 
 .button {

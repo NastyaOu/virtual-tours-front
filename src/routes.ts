@@ -20,7 +20,7 @@ export const routes: RouteRecordRaw[] = [
     component: Home
   },
   {
-    path: '/organization',
+    path: '/organization/:id',
     component: Organization
   },
   {
