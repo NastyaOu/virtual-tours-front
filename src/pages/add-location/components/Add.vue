@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import ConfirmAddBox from '@/pages/shared/ConfirmAddBox.vue'
+import { createLocation } from '@/services/location-service'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+
+const name = ref('')
+const fileInput = ref()
 
 const isAddBoxOpen = ref(false)
 
@@ -12,11 +17,21 @@ const onAddBtnClick = () => {
 }
 
 const onCancelBtnClick = () => {
-  router.push('/admin/organizations/1/locations')
+  router.push(`/admin/organizations/${route.params.id}/locations`)
 }
 
 const onAddBoxClose = (result: boolean) => {
   isAddBoxOpen.value = false
+
+  if (!result) return
+
+  const formData = new FormData()
+
+  formData.append('name', name.value)
+  formData.append('image', fileInput.value.files[0])
+
+  createLocation(Number(route.params.id), formData)
+  router.push(`/admin/organizations/${route.params.id}/locations`)
 }
 </script>
 
@@ -27,12 +42,12 @@ const onAddBoxClose = (result: boolean) => {
       <div class="list">
         <div class="item">
           <label>Название локации</label>
-          <input type="text" />
+          <input type="text" v-model="name" />
         </div>
         <div class="item">
           <label>Изображение</label>
           <div class="item">
-            <input type="file" />
+            <input ref="fileInput" type="file" />
             <img src="/src/assets/close.svg" />
           </div>
         </div>

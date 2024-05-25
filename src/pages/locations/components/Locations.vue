@@ -1,15 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ConfirmDelBox from './../../shared/ConfirmDelBox.vue'
+import type { ILocation } from '@/interfaces/Location'
+import { deleteLocation, getLocations } from '@/services/location-service'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const locations = ref<ILocation[]>()
+
+onMounted(() => {
+  refreshLocations()
+})
+
+const refreshLocations = () => {
+  getLocations(Number(route.params.id)).then((res) => {
+    locations.value = res
+  })
+}
 
 const isDelBoxOpen = ref(false)
+const deleteCandidate = ref(0)
 
-const onDelBtnClick = () => {
+const onDelBtnClick = (id: number) => {
+  deleteCandidate.value = id
   isDelBoxOpen.value = true
 }
 
 const onDelBoxClose = (result: boolean) => {
   isDelBoxOpen.value = false
+
+  if (result) {
+    deleteLocation(deleteCandidate.value)
+    setTimeout(refreshLocations, 100)
+  } else deleteCandidate.value = 0
 }
 </script>
 
@@ -18,14 +42,14 @@ const onDelBoxClose = (result: boolean) => {
     <div class="content">
       <h1>Локации</h1>
       <div class="list">
-        <div class="item">
-          <RouterLink to="locations/1/tour">
-            <p>Локация 1. Главный вход</p>
+        <div class="item" v-for="location of locations" :key="location.idLocation">
+          <RouterLink :to="`locations/${location.idLocation}/tour`">
+            <p>{{ location.name }}</p>
           </RouterLink>
-          <RouterLink to="locations/1">
+          <RouterLink :to="`locations/${location.idLocation}`">
             <img src="/src/assets/edit.svg" />
           </RouterLink>
-          <img src="/src/assets/del.svg" @click="onDelBtnClick" />
+          <img src="/src/assets/del.svg" @click="onDelBtnClick(location.idLocation)" />
         </div>
       </div>
       <RouterLink to="locations/new">

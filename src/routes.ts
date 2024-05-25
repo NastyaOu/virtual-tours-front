@@ -52,10 +52,10 @@ export const routes: RouteRecordRaw[] = [
                     component: AddLocation
                   },
                   {
-                    path: '/admin/organizations/:organizationId/locations/:locationId',
+                    path: '/admin/organizations/:id/locations/:locationId',
                     children: [
                       {
-                        path: '/admin/organizations/:organizationId/locations/:locationId/tour',
+                        path: '/admin/organizations/:id/locations/:locationId/tour',
                         component: TourAdmin
                       },
                       {
