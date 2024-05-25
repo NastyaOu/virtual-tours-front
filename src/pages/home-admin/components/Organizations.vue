@@ -7,10 +7,14 @@ import { deleteOrganization, getOrganizations } from '@/services/organization-se
 const organizations = ref<IOrganization[]>()
 
 onMounted(() => {
+  refreshOrganizations()
+})
+
+const refreshOrganizations = () => {
   getOrganizations().then((res) => {
     organizations.value = res
   })
-})
+}
 
 const isDelBoxOpen = ref(false)
 const deleteCandidate = ref(0)
@@ -23,8 +27,10 @@ const onDelBtnClick = (id: number) => {
 const onDelBoxClose = (result: boolean) => {
   isDelBoxOpen.value = false
 
-  if (result) deleteOrganization(deleteCandidate.value)
-  else deleteCandidate.value = 0
+  if (result) {
+    deleteOrganization(deleteCandidate.value)
+    setTimeout(refreshOrganizations, 100)
+  } else deleteCandidate.value = 0
 }
 </script>
 

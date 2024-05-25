@@ -55,6 +55,7 @@ const onSaveAddBoxClose = (result: boolean) => {
   }
 
   updateOrganization(Number(route.params.id), formData)
+  router.push('/admin/organizations')
 }
 </script>
 

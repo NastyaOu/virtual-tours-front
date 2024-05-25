@@ -42,6 +42,7 @@ const onAddBoxClose = (result: boolean) => {
   formData.append('image', fileInput.value.files[0])
 
   createOrganization(formData)
+  router.push('/admin/organizations')
 }
 </script>
 

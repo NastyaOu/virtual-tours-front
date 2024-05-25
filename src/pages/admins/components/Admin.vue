@@ -1,15 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ConfirmDelBox from './../../shared/ConfirmDelBox.vue'
+import type { IStaff } from '@/interfaces/Staff'
+import { deleteStaff, getStaff } from '@/services/staff-service'
+
+const staff = ref<IStaff[]>()
+
+const refreshStaff = () => {
+  getStaff().then((res) => {
+    staff.value = res
+  })
+}
+
+onMounted(() => {
+  refreshStaff()
+})
 
 const isDelBoxOpen = ref(false)
+const deleteCandidate = ref(0)
 
-const onDelBtnClick = () => {
+const onDelBtnClick = (id: number) => {
+  deleteCandidate.value = id
   isDelBoxOpen.value = true
 }
 
 const onDelBoxClose = (result: boolean) => {
   isDelBoxOpen.value = false
+
+  if (result) {
+    deleteStaff(deleteCandidate.value)
+    setTimeout(refreshStaff, 100)
+  } else deleteCandidate.value = 0
 }
 </script>
 
@@ -18,15 +39,15 @@ const onDelBoxClose = (result: boolean) => {
     <div class="content">
       <h1>Администраторы</h1>
       <div class="list">
-        <div class="item">
+        <div class="item" v-for="staffEl of staff" :key="staffEl.idStaff">
           <div class="item-content">
-            <p>Онуфриенко</p>
-            <p>Анастасия</p>
+            <p>{{ staffEl.lastname }}</p>
+            <p>{{ staffEl.name }}</p>
           </div>
-          <RouterLink to="staff/1">
+          <RouterLink :to="`staff/${staffEl.idStaff}`">
             <img src="/src/assets/edit.svg" />
           </RouterLink>
-          <img src="/src/assets/del.svg" @click="onDelBtnClick" />
+          <img src="/src/assets/del.svg" @click="onDelBtnClick(staffEl.idStaff)" />
         </div>
       </div>
       <RouterLink to="staff/new">
@@ -77,7 +98,7 @@ h1 {
   /* элементы по центру по вертикали*/
 }
 
-.item > * {
+.item > img {
   cursor: pointer;
 }
 

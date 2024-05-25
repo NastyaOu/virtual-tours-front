@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import ConfirmAddBox from '@/pages/shared/ConfirmAddBox.vue'
+import { register } from '@/services/staff-service'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+const name = ref('')
+const lastname = ref('')
+const login = ref('')
+const password = ref('')
 
 const isAddBoxOpen = ref(false)
 
@@ -17,6 +23,11 @@ const onCancelBtnClick = () => {
 
 const onAddBoxClose = (result: boolean) => {
   isAddBoxOpen.value = false
+
+  if (!result) return
+
+  register(name.value, lastname.value, login.value, password.value)
+  router.push('/admin/staff')
 }
 </script>
 
@@ -27,19 +38,19 @@ const onAddBoxClose = (result: boolean) => {
       <div class="list">
         <div class="item">
           <label>Фамилия</label>
-          <input type="text" />
+          <input type="text" v-model="lastname" />
         </div>
         <div class="item">
           <label>Имя</label>
-          <input type="text" />
+          <input type="text" v-model="name" />
         </div>
         <div class="item">
           <label>Логин</label>
-          <input type="text" />
+          <input type="text" v-model="login" />
         </div>
         <div class="item">
           <label>Пароль</label>
-          <input type="text" />
+          <input type="password" v-model="password" />
         </div>
       </div>
       <div class="button">

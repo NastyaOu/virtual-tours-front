@@ -1,9 +1,22 @@
 <script setup lang="ts">
 import ConfirmSaveAddBox from '@/pages/shared/ConfirmSaveAddBox.vue'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { getOneStaff, updateStaff } from '@/services/staff-service'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
+
+const name = ref('')
+const lastname = ref('')
+
+const route = useRoute()
+
+onMounted(() => {
+  getOneStaff(Number(route.params.id)).then((res) => {
+    name.value = res.name
+    lastname.value = res.lastname
+  })
+})
 
 const isSaveAddBoxOpen = ref(false)
 
@@ -17,6 +30,11 @@ const onCancelBtnClick = () => {
 
 const onSaveAddBoxClose = (result: boolean) => {
   isSaveAddBoxOpen.value = false
+
+  if (!result) return
+
+  updateStaff(Number(route.params.id), name.value, lastname.value)
+  router.push('/admin/staff')
 }
 </script>
 
@@ -27,20 +45,20 @@ const onSaveAddBoxClose = (result: boolean) => {
       <div class="list">
         <div class="item">
           <label>Фамилия</label>
-          <input type="text" />
+          <input type="text" v-model="lastname" />
         </div>
         <div class="item">
           <label>Имя</label>
-          <input type="text" />
+          <input type="text" v-model="name" />
         </div>
-        <div class="item">
+        <!-- <div class="item">
           <label>Логин</label>
           <input type="text" />
         </div>
         <div class="item">
           <label>Пароль</label>
           <input type="text" />
-        </div>
+        </div> -->
       </div>
       <div class="button">
         <button @click="onSaveAddBtnClick">Сохранить</button>
