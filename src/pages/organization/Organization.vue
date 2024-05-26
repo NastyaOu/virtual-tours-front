@@ -31,7 +31,7 @@ onMounted(() => {
   <OrganizationHistory :history="organization.history" />
 
   <OrganizationItem
-    link="/tour"
+    :link="`/organization/${route.params.id}/tour`"
     :name="organization!.name"
     :img-src="getFileName(organization!.image)"
   />

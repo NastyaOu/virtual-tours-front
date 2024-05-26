@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import Tres from '@tresjs/core'
 
 import App from './App.vue'
 import { routes } from './routes'
@@ -26,4 +27,4 @@ router.beforeEach((to, from) => {
     }
 })
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(Tres).mount('#app')

@@ -7,7 +7,9 @@ import Header from './pages/shared/Header.vue'
   <div class="layout">
     <Header></Header>
     <main>
-      <router-view></router-view>
+      <Suspense>
+        <router-view></router-view>
+      </Suspense>
     </main>
     <Footer></Footer>
   </div>

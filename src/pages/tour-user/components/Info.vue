@@ -1,13 +1,29 @@
+<script setup lang="ts">
+interface Props {
+  text: string
+}
+
+interface Emits {
+  (e: 'close'): void
+}
+
+defineProps<Props>()
+
+const emit = defineEmits<Emits>()
+
+const onClose = () => {
+  emit('close')
+}
+</script>
+
 <template>
   <div class="modal">
-    <button>
+    <button @click="onClose">
       <img src="/src/assets/close2.svg" />
     </button>
     <div class="text">
       <p>
-        fiheif ewkjnfeh;auhf ewfaewfawfjefk wfjnenfjwjfjnawef fiheif ewkjnfeh;auhf ewfaewfawfjefk
-        wfjnenfjwjfjnawef fiheif ewkjnfeh;auhf ewfaewfawfjefk wfjnenfjwjfjnawef fiheif ewkjnfeh;auhf
-        ewfaewfawfjefk wfjnenfjwjfjnawef fiheif ewkjnfeh;auhf ewfaewfawfjefk wfjnenfjwjfjnawef
+        {{ text }}
       </p>
     </div>
   </div>

@@ -21,11 +21,16 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/organization/:id',
-    component: Organization
-  },
-  {
-    path: '/tour',
-    component: TourUser
+    children: [
+      {
+        path: '/organization/:id/tour',
+        component: TourUser
+      },
+      {
+        path: '',
+        component: Organization
+      }
+    ]
   },
   {
     path: '/admin',
