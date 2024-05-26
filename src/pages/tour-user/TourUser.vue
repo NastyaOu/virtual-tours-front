@@ -149,13 +149,15 @@ const loadLocation = (idLocation: number) => {
 }
 
 const getPosition = (coordX: number, coordY: number) => {
-  const radius = 7
-  const theta = MathUtils.degToRad(coordX)
-  const phi = MathUtils.degToRad(coordY)
+  const radius = 490
 
-  const x = radius * Math.sin(theta) * Math.cos(phi)
-  const y = radius * Math.sin(theta) * Math.sin(phi)
-  const z = radius * Math.cos(theta)
+  coordY = Math.max(-85, Math.min(85, coordY))
+  const phi = MathUtils.degToRad(90 - coordY)
+  const theta = MathUtils.degToRad(coordX)
+
+  const x = radius * Math.sin(phi) * Math.cos(theta)
+  const y = radius * Math.cos(phi)
+  const z = radius * Math.sin(phi) * Math.sin(theta)
 
   return new Vector3(x, y, z)
 }
@@ -232,7 +234,7 @@ const onTransitionClick = (idTransition: number) => {
       :position="getPosition(infoBlock.coordX, infoBlock.coordY)"
       @click="onInfoClick(infoBlock.idInfoBlock)"
     >
-      <TresPlaneGeometry :args="[0.3, 0.3]"></TresPlaneGeometry>
+      <TresPlaneGeometry :args="[30, 30]"></TresPlaneGeometry>
       <TresMeshBasicMaterial transparent :map="btnInfoMap"></TresMeshBasicMaterial>
     </TresMesh>
 
@@ -243,7 +245,7 @@ const onTransitionClick = (idTransition: number) => {
       :position="getPosition(photo.coordX, photo.coordY)"
       @click="onPhotoClick(photo.idMedia)"
     >
-      <TresPlaneGeometry :args="[0.3, 0.3]"></TresPlaneGeometry>
+      <TresPlaneGeometry :args="[30, 30]"></TresPlaneGeometry>
       <TresMeshBasicMaterial transparent :map="btnPhotoMap"></TresMeshBasicMaterial>
     </TresMesh>
 
@@ -254,7 +256,7 @@ const onTransitionClick = (idTransition: number) => {
       :position="getPosition(video.coordX, video.coordY)"
       @click="onVideoClick(video.idMedia)"
     >
-      <TresPlaneGeometry :args="[0.3, 0.3]"></TresPlaneGeometry>
+      <TresPlaneGeometry :args="[30, 30]"></TresPlaneGeometry>
       <TresMeshBasicMaterial transparent :map="btnVideoMap"></TresMeshBasicMaterial>
     </TresMesh>
 
@@ -265,7 +267,7 @@ const onTransitionClick = (idTransition: number) => {
       :position="getPosition(transition.coordX, transition.coordY)"
       @click="onTransitionClick(transition.idTransition)"
     >
-      <TresPlaneGeometry :args="[0.3, 0.3]"></TresPlaneGeometry>
+      <TresPlaneGeometry :args="[30, 30]"></TresPlaneGeometry>
       <TresMeshBasicMaterial transparent :map="btnTransitionMap"></TresMeshBasicMaterial>
     </TresMesh>
   </TresCanvas>
