@@ -20,7 +20,16 @@ onMounted(() => {
 
 const isSaveAddBoxOpen = ref(false)
 
+const error = ref('')
+
 const onSaveAddBtnClick = () => {
+  error.value = ""
+
+  if (name.value.trim() === "" || lastname.value.trim() === "") {
+    error.value = 'Заполните все поля'
+    return
+  }
+
   isSaveAddBoxOpen.value = true
 }
 
@@ -33,7 +42,12 @@ const onSaveAddBoxClose = (result: boolean) => {
 
   if (!result) return
 
-  updateStaff(Number(route.params.id), name.value, lastname.value)
+  updateStaff(Number(route.params.id), name.value, lastname.value).catch((err) => {
+    error.value = err.response.data
+  })
+
+  if (error.value.length) return
+
   router.push('/admin/staff')
 }
 </script>
@@ -50,6 +64,9 @@ const onSaveAddBoxClose = (result: boolean) => {
         <div class="item">
           <label>Имя</label>
           <input type="text" v-model="name" />
+        </div>
+        <div class="item">
+          <label>{{ error }}</label>
         </div>
         <!-- <div class="item">
           <label>Логин</label>
@@ -126,8 +143,6 @@ label {
 input {
   width: 920px;
   /* ширина */
-  border: 1px solid #2d2d2d;
-  /* цвет */
 }
 
 .items {

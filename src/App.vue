@@ -71,4 +71,18 @@ body {
 main {
   flex: 1 0 auto;
 }
+
+input {
+  padding: 0 10px;
+
+  border: 1px solid #2d2d2d; /* цвет */
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type="file"] {
+  border: none;
+}
 </style>

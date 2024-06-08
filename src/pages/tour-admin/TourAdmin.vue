@@ -450,7 +450,7 @@ const onBackButtonClick = () => {
   </div>
 
   <div class="btn">
-    <img src="/src/assets/add.svg" width="60px" height="60px" @click="onAddBtnClick" />
+    <img src="/src/assets/add1.svg" width="60px" height="60px" @click="onAddBtnClick" />
   </div>
 
   <Menu

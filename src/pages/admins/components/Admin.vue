@@ -51,7 +51,7 @@ const onDelBoxClose = (result: boolean) => {
         </div>
       </div>
       <RouterLink to="staff/new">
-        <img src="/src/assets/add.svg" />
+        <img class="btn" src="/src/assets/add.svg" />
       </RouterLink>
     </div>
   </aside>
@@ -133,5 +133,10 @@ p {
 img {
   padding-right: 4px;
   /* отступ справа */
+}
+
+.btn {
+  width: 30px;
+  aspect-ratio: 1 / 1;
 }
 </style>

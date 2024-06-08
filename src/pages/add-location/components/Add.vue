@@ -12,7 +12,16 @@ const fileInput = ref()
 
 const isAddBoxOpen = ref(false)
 
+const error = ref('')
+
 const onAddBtnClick = () => {
+  error.value = ""
+
+  if (name.value.trim() === "" || !fileInput.value.files[0]) {
+    error.value = 'Заполните все поля'
+    return
+  }
+
   isAddBoxOpen.value = true
 }
 
@@ -30,7 +39,12 @@ const onAddBoxClose = (result: boolean) => {
   formData.append('name', name.value)
   formData.append('image', fileInput.value.files[0])
 
-  createLocation(Number(route.params.id), formData)
+  createLocation(Number(route.params.id), formData).catch((err) => {
+    error.value = err.response.data
+  })
+
+  if (error.value.length) return
+
   router.push(`/admin/organizations/${route.params.id}/locations`)
 }
 </script>
@@ -48,11 +62,10 @@ const onAddBoxClose = (result: boolean) => {
           <label>Изображение</label>
           <div class="item">
             <input ref="fileInput" type="file" />
-            <img src="/src/assets/close.svg" />
           </div>
         </div>
-        <div class="btn">
-          <img src="/src/assets/add.svg" />
+        <div class="item">
+          <label>{{ error }}</label>
         </div>
       </div>
       <div class="button">
@@ -122,8 +135,6 @@ label {
 input {
   width: 920px;
   /* ширина */
-  border: 1px solid #2d2d2d;
-  /* цвет */
 }
 
 .item {

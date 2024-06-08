@@ -31,7 +31,16 @@ onMounted(() => {
 
 const isSaveAddBoxOpen = ref(false)
 
+const error = ref('')
+
 const onSaveAddBtnClick = () => {
+  error.value = ""
+
+  if (name.value.trim() === "" || description.value.trim() === "" || history.value.some(historyEl => historyEl.trim() === "")|| !fileInput.value.files[0]) {
+    error.value = 'Заполните все поля'
+    return
+  }
+
   isSaveAddBoxOpen.value = true
 }
 
@@ -54,7 +63,12 @@ const onSaveAddBoxClose = (result: boolean) => {
     formData.append('image', fileInput.value.files[0])
   }
 
-  updateOrganization(Number(route.params.id), formData)
+  updateOrganization(Number(route.params.id), formData).catch((err) => {
+    error.value = err.response.data
+  })
+
+  if (error.value.length) return
+
   router.push('/admin/organizations')
 }
 </script>
@@ -80,17 +94,21 @@ const onSaveAddBoxClose = (result: boolean) => {
               <input type="text" v-model="history[index + 1]" />
               <img src="/src/assets/close.svg" @click="onDelHistoryBtnClick(index + 1)" />
             </div>
+            <div class="btn">
+              <img src="/src/assets/add.svg" @click="onAddHistoryBtnClick" />
+            </div>
           </div>
         </div>
-        <div class="btn">
-          <img src="/src/assets/add.svg" @click="onAddHistoryBtnClick" />
-        </div>
+        
         <div class="item">
           <label>Изображение</label>
           <div class="item">
             <input ref="fileInput" type="file" />
-            <img src="/src/assets/close.svg" />
           </div>
+        </div>
+
+        <div class="item">
+          <label>{{ error }}</label>
         </div>
       </div>
       <div class="button">
@@ -159,8 +177,6 @@ label {
 input {
   width: 920px;
   /* ширина */
-  border: 1px solid #2d2d2d;
-  /* цвет */
 }
 
 .items {
@@ -176,18 +192,21 @@ input {
   display: flex; /* элементы в блок */
   flex-direction: row; /* элементы в строку */
   gap: 5px; /* отступ между элементами */
+
+  position: relative;
 }
 
 .items .item > img {
+  position: absolute;
+  left: calc(100% + 5px);
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
 }
 
-.btn {
-  padding-left: 250px;
-  /* отступ слева */
-}
-
 .btn > img {
+  width: 30px;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
 }
 

@@ -116,7 +116,6 @@ label {
 
 input {
   width: 460px; /* ширина */
-  border: 1px solid #2d2d2d; /* цвет */
 }
 
 .button {

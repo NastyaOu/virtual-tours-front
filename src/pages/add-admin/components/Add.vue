@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ConfirmAddBox from '@/pages/shared/ConfirmAddBox.vue'
 import { register } from '@/services/staff-service'
+import { RefSymbol } from '@vue/reactivity';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -14,6 +15,13 @@ const password = ref('')
 const isAddBoxOpen = ref(false)
 
 const onAddBtnClick = () => {
+  error.value = ""
+
+  if (name.value.trim() === "" || lastname.value.trim() === "" || login.value.trim() === "" || password.value.trim() === "" ) {
+    error.value = 'Заполните все поля'
+    return
+  }
+
   isAddBoxOpen.value = true
 }
 
@@ -21,12 +29,19 @@ const onCancelBtnClick = () => {
   router.push('/admin/staff')
 }
 
+const error = ref('')
+
 const onAddBoxClose = (result: boolean) => {
   isAddBoxOpen.value = false
 
   if (!result) return
 
-  register(name.value, lastname.value, login.value, password.value)
+  register(name.value, lastname.value, login.value, password.value).catch((err) => {
+    error.value = err.response.data
+  })
+
+  if (error.value.length) return
+
   router.push('/admin/staff')
 }
 </script>
@@ -51,6 +66,9 @@ const onAddBoxClose = (result: boolean) => {
         <div class="item">
           <label>Пароль</label>
           <input type="password" v-model="password" />
+        </div>
+        <div class="item">
+          <label>{{ error }}</label>
         </div>
       </div>
       <div class="button">
@@ -120,8 +138,6 @@ label {
 input {
   width: 1050px;
   /* ширина */
-  border: 1px solid #2d2d2d;
-  /* цвет */
 }
 
 .item {
