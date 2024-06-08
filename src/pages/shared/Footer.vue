@@ -4,8 +4,12 @@
             <div class="footer-content">
                 <img src="/src/assets/logo.png" title="Логотип" alt="Логотип" width="63" height="63">
                 <nav>
-                    <a>О проекте</a>
-                    <a>Организации</a>
+                    <RouterLink to="/#about">
+                        <a>О проекте</a>
+                    </RouterLink>
+                    <RouterLink to="/#organizations">
+                        <a>Организации</a>
+                    </RouterLink>
                 </nav>
             </div>
             <p>
@@ -32,6 +36,11 @@ nav {
     font-size: 20px; /* размер текста*/
     gap: 80px; /* отступы между элементами*/
     padding-left: 363px;
+}
+
+a {
+  color: #ffffff; /* цвет текста */
+  text-decoration: none;
 }
 
 p {
