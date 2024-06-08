@@ -27,7 +27,8 @@ const onClick = () => {
 
 <style scoped>
 .wrap {
-  /* фон */
+  background-color: rgba(0, 0, 0, 0.5);/* фон */
+  background-blend-mode: color;
   background-size: cover;
   background-position: 50% 50%;
   padding: 240px 0px; /* отступы */
