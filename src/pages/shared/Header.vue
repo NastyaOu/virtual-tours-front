@@ -95,9 +95,16 @@ header {
   display: flex; /* элементы в блок */
   align-items: center; /* элементы по центру по вертикали*/
   justify-content: space-between; /* элементы по ширине */
+
+  position: relative;
 }
 
 nav {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   display: flex; /* элементы в блок */
   color: #ffffff; /* цвет текста */
   font-size: 20px; /* размер текста */
