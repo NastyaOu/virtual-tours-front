@@ -227,7 +227,7 @@ const onBackButtonClick = () => {
   <Photo v-if="isPhotoOpen" :src="currentPhoto" @close="onPhotoClose"></Photo>
   <Video v-if="isVideoOpen" :src="currentVideo" @close="onVideoClose"></Video>
 
-  <TresCanvas v-if="show" window-size>
+  <TresCanvas v-if="show" window-size output-color-space="srgb-linear">
     <TresPerspectiveCamera :look-at="cameraLookAt" :position="zeroCoords"> </TresPerspectiveCamera>
 
     <TresMesh :scale="meshScale" :position="zeroCoords">

@@ -492,7 +492,7 @@ const onBackButtonClick = () => {
 
   <ConfirmDelBox v-if="isDelBoxOpen" @close="onDelBoxClose"></ConfirmDelBox>
 
-  <TresCanvas v-if="show" window-size>
+  <TresCanvas v-if="show" window-size output-color-space="srgb-linear">
     <TresPerspectiveCamera :look-at="cameraLookAt" :position="zeroCoords"> </TresPerspectiveCamera>
 
     <TresMesh :scale="meshScale" :position="zeroCoords">
