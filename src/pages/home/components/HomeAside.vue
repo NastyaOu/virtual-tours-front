@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const onClick = () => {
+  router.push('/#about')
+}
+</script>
+
 <template>
   <div class="wrap">
     <div class="content">
@@ -6,7 +16,7 @@
         Уникальная коллекция виртуальных туров<br />
         по учреждениям системы дополнительного образования города Кирово-Чепецка
       </p>
-      <button>О проекте</button>
+      <button @click="onClick">О проекте</button>
     </div>
   </div>
   <div class="video-wrapper">

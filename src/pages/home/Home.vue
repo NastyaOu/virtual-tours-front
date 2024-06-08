@@ -22,6 +22,7 @@ onMounted(() => {
 
   <HomeAbout />
 
+  <div id="organizations"></div>
   <OrganizationItem
     v-for="organization of organizations"
     :key="organization.idOrganization"
