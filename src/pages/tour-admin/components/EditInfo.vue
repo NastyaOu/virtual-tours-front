@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ConfirmSaveAddBox from '@/pages/shared/ConfirmSaveAddBox.vue'
+import type { IInfoBlock } from '@/interfaces/Location';
+
+interface Props {
+  infoBlock:IInfoBlock
+}
 
 interface Emits {
   (e: 'close', text?: string): string | void
 }
 
+const props = defineProps<Props>()
+
 const emit = defineEmits<Emits>()
 
 const text = ref('')
+
+onMounted(()=>{
+  text.value=props.infoBlock.text
+})
 
 const onCancelBtnClick = () => {
   emit('close')

@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="btn">
-            <img src="/src/assets/add.svg" width="60px" height="60px">
+            <img src="/src/assets/add1.svg" width="60px" height="60px">
         </div>
         <img src="/src/assets/btn_video.svg">
         <img src="/src/assets/btn_photo.svg">

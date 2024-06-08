@@ -8,7 +8,7 @@ import { MathUtils, Texture, Vector3 } from 'three'
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getLocation, getLocations } from '@/services/location-service'
 import {
   type ITransition,
@@ -208,9 +208,17 @@ const onTransitionClick = (idTransition: number) => {
 
   loadLocation(idLocation!)
 }
+
+const router = useRouter()
+
+const onBackButtonClick = () => {
+  router.push(`/organization/${route.params.id}`)
+}
 </script>
 
 <template>
+  <button @click="onBackButtonClick" class="back-button">Назад</button>
+
   <div class="loader-container">
     <div class="loader"></div>
   </div>
@@ -274,6 +282,20 @@ const onTransitionClick = (idTransition: number) => {
 </template>
 
 <style scoped>
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  font-size: 20px; /* размер текста */
+  background-color: rgba(45, 45, 45, 0%); /* цвет кнопки */
+  border: 2px solid #fff; /* цвет и размер рамки */
+  text-align: center; /* текст по центру */
+  color: #fff; /* цвет текста */
+  width: 240px; /* ширина */
+  height: 65px; /* высота */
+}
+
 .loader-container {
   width: 100%;
   height: 100%;

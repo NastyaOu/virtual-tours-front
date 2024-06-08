@@ -14,7 +14,7 @@ import { MathUtils, Texture, Vector3, type Intersection } from 'three'
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getLocation, getLocations } from '@/services/location-service'
 import {
   type ITransition,
@@ -434,9 +434,17 @@ const onPointerEnter = (type: 'info' | 'media' | 'transition', id: number) => {
 const onPointerLeave = () => {
   hoveredObject.value = undefined
 }
+
+const router = useRouter()
+
+const onBackButtonClick = () => {
+  router.push(`/admin/organizations/${route.params.id}/locations`)
+}
 </script>
 
 <template>
+  <button @click="onBackButtonClick" class="back-button">Назад</button>
+
   <div class="loader-container">
     <div class="loader"></div>
   </div>
@@ -547,6 +555,20 @@ const onPointerLeave = () => {
 </template>
 
 <style scoped>
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  font-size: 20px; /* размер текста */
+  background-color: rgba(45, 45, 45, 0%); /* цвет кнопки */
+  border: 2px solid #fff; /* цвет и размер рамки */
+  text-align: center; /* текст по центру */
+  color: #fff; /* цвет текста */
+  width: 240px; /* ширина */
+  height: 65px; /* высота */
+}
+
 .btn {
   display: flex; /* элементы в блок */
   padding: 20px 20px; /* отступы */

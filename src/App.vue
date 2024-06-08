@@ -26,6 +26,8 @@ import Header from './pages/shared/Header.vue'
 
 button {
   cursor: pointer;
+  background: transparent;
+  border: none;
 }
 
 template {

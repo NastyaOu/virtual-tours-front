@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+
 interface Props {
   text: string
 }
@@ -7,13 +9,19 @@ interface Emits {
   (e: 'close'): void
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<Emits>()
+
+const formattedText = ref('')
 
 const onClose = () => {
   emit('close')
 }
+
+onMounted(() => {
+  formattedText.value = props.text.replaceAll('•	', '<br/>•	')
+})
 </script>
 
 <template>
@@ -22,8 +30,8 @@ const onClose = () => {
       <img src="/src/assets/close2.svg" />
     </button>
     <div class="text">
-      <p>
-        {{ text }}
+      <p v-html="formattedText">
+        
       </p>
     </div>
   </div>
@@ -47,6 +55,7 @@ const onClose = () => {
   height: 400px; /* высота */
   position: relative; /* относительное положение */
   margin: 30px; /* отступы */
+  overflow-y: auto;
 }
 
 button {
@@ -63,5 +72,6 @@ p {
   line-height: 40px; /* отступы внтри текста*/
   color: #fff; /* цвер текста */
   margin: 0%; /* отступы */
+  padding-right: 10px;
 }
 </style>
