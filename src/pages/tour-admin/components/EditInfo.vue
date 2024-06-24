@@ -17,6 +17,7 @@ const emit = defineEmits<Emits>()
 
 const text = ref('')
 
+// изначальный текст передается в качестве пропа
 onMounted(()=>{
   text.value=props.infoBlock.text
 })

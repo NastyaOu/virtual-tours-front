@@ -1,11 +1,13 @@
 <script setup lang="ts">
 interface Emits {
+  // е-название эмита
   (e: 'close', result: boolean): boolean
 }
 
 const emit = defineEmits<Emits>()
 
 const onClose = (result: boolean) => {
+  // внутрь проспы, наружу-эмиты
   emit('close', result)
 }
 </script>
@@ -34,11 +36,13 @@ const onClose = (result: boolean) => {
 }
 
 h1 {
+  display: flex;
   font-size: 36px; /* рамзер текста */
   padding-bottom: 20px; /* отступ снизу */
   margin: 0%; /* нет внутренних отступов */
   color: #fff; /* цвет текста */
   align-items: center; /* текст по центру по вертикали */
+  justify-content: center;
 }
 
 .button {

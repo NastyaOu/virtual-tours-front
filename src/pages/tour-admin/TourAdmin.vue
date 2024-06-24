@@ -500,6 +500,9 @@ const onBackButtonClick = () => {
       <TresMeshBasicMaterial :side="1" :map="backgroundMap"> </TresMeshBasicMaterial>
     </TresMesh>
 
+    <!-- отличается появлением pointer-enter и pointer-leave-->
+     <!-- алгоритм в том, что при наведении курсора на элемент, это отмечается в системе и если зажать курсор и начать им двигать, то а курсором будет следовать элемент-->
+      <!-- также меняем по x и y, в зависимости от этого меняются три координаты на поверхности сферы -->
     <TresMesh
       v-for="(infoBlock, index) in infoBlocks"
       :key="infoBlock.idInfoBlock"

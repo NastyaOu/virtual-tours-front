@@ -34,11 +34,13 @@ const onClose = (result: boolean) => {
 }
 
 h1 {
+  display: flex;
   font-size: 36px; /* рамзер текста */
   padding-bottom: 20px; /* отступ снизу */
   margin: 0%; /* нет внутренних отступов */
   color: #fff; /* цвет текста */
   align-items: center; /* текст по центру по вертикали*/
+  justify-content: center;
 }
 
 .button {

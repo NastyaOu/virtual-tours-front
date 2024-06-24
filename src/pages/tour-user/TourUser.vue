@@ -77,15 +77,21 @@ const onPointerUp = (event: PointerEvent) => {
   document.removeEventListener('pointerup', onPointerUp)
 }
 
+// засчет этого осуществляется вращение камерой
+// cameraLookAt-это computed свойство(как бы прокаченная реактивная переменная, которая постоянно обновляется)
+// снижает производительность приложения, но она обеспечивает актуальные данные
 const cameraLookAt = computed(() => {
+  // переходим к другим системам координат(нам надо из двух(x и y) в три(x,y,z, которые будут в сферической системе координат))
   lat.value = Math.max(-85, Math.min(85, lat.value))
   const phi = MathUtils.degToRad(90 - lat.value)
   const theta = MathUtils.degToRad(lon.value)
 
+  // формулы с википедии(сферическая система координат), только y и z наоборот
   const x = sphereRadius * Math.sin(phi) * Math.cos(theta)
   const y = sphereRadius * Math.cos(phi)
   const z = sphereRadius * Math.sin(phi) * Math.sin(theta)
 
+  // возвращает координаты, куда надо смотреть
   return [x, y, z]
 })
 
@@ -125,15 +131,18 @@ onMounted(() => {
   })
 })
 
+// функция загрузки локации, запрашивает айди
 const loadLocation = (idLocation: number) => {
   show.value = false
 
+  // передает айди дальше, когда запрашивает с бэкенда локацию
   getLocation(idLocation).then((res) => {
     infoBlocks.value = res.infoBlocks
     photos.value = res.media.filter((media) => media.type === 'photo')
     videos.value = res.media.filter((media) => media.type === 'video')
     transitions.value = res.transitions
 
+    // делаем из фотографии текстуру, текстура накладывается на элемент в 3д пространстве(в этой библиотеке нужно использовать текстуру, а не просто изображение)
     useTexture({
       map: getFileName(res.image)
     }).then((res) => {
@@ -143,6 +152,7 @@ const loadLocation = (idLocation: number) => {
     })
   })
 
+  // спустя 100 миллисекунд показывает загруженную локацию(для избежания ошибки, когда фото не загружалось)
   setTimeout(() => {
     show.value = true
   }, 100)
@@ -166,6 +176,7 @@ const getLookAt = (coordX: number, coordY: number) => {
   return new Vector3().subVectors(zeroCoords.value, getPosition(coordX, coordY)).normalize()
 }
 
+// запоминаем какой открывается инфоблок и просто открываем модальное окно
 const onInfoClick = (idInfoBlock: number) => {
   currentInfo.value = infoBlocks.value.find(
     (infoBlock) => infoBlock.idInfoBlock === idInfoBlock
@@ -174,6 +185,7 @@ const onInfoClick = (idInfoBlock: number) => {
   isInfoOpen.value = true
 }
 
+// закрываем окно и опустошаем текущий инфоблок
 const onInfoClose = () => {
   isInfoOpen.value = false
   currentInfo.value = ''
@@ -185,6 +197,7 @@ const onPhotoClick = (idMedia: number) => {
   isPhotoOpen.value = true
 }
 
+// закрываем окно и удаляем текущее фото
 const onPhotoClose = () => {
   isPhotoOpen.value = false
   currentPhoto.value = ''
@@ -223,18 +236,38 @@ const onBackButtonClick = () => {
     <div class="loader"></div>
   </div>
 
+  <!-- если окно открыто, принимаем какие-то данные и реагируем на клоуз -->
   <Info v-if="isInfoOpen" :text="currentInfo" @close="onInfoClose"></Info>
   <Photo v-if="isPhotoOpen" :src="currentPhoto" @close="onPhotoClose"></Photo>
   <Video v-if="isVideoOpen" :src="currentVideo" @close="onVideoClose"></Video>
 
+  <!-- tres это надстройка над оригинальной библиотекой tree.js. она позволяет прямо в коде template писать tree.js функционал в формате формате тегов -->
+   <!-- в основе любого 3д элемента всегда лежит  Canvas-->
+    <!-- проп window-size для того, чтобы расстягивать тур на всю страницу. output-color-space назначает цветовое пространство, чтобы не было засветления в цветах-->
+     <!-- управляется засчет переменной show -->
   <TresCanvas v-if="show" window-size output-color-space="srgb-linear">
+    <!-- камера-то есть точка обзора. мы управляем направлением, куда она смотрит(look-at) и ее позицией(position, изначально 0)-->
     <TresPerspectiveCamera :look-at="cameraLookAt" :position="zeroCoords"> </TresPerspectiveCamera>
 
+    <!-- создается сфера -->
+     <!-- выворачиваем сферу по координате х(meshScale), чтобы мы могли видеть сферу в нужном нам фопмате и натянуть на нее изображение -->
+      <!-- позиция нулевая, то есть мы находимся в центре сферы -->
     <TresMesh :scale="meshScale" :position="zeroCoords">
+      <!-- геометрия сферы модержит радиус -->
       <TresSphereGeometry :args="[sphereRadius, 60, 60]"> </TresSphereGeometry>
+      <!-- в материал в текстуру(map) загружаем текстуру, которую мы создавали при загрузке локации. 
+       так рисуется вывернутая сфера, у которой натянута текстура нашего изображения локации -->
       <TresMeshBasicMaterial :side="1" :map="backgroundMap"> </TresMeshBasicMaterial>
     </TresMesh>
 
+    <!-- вью позволяет выводит различные элементы циклически. это позволяет динамически их выводить. для этого требуется ключевое слово v-for
+     затем мы берем элемент infoBlock из массива infoBlocks -->
+     <!-- key ключ требуется для внутренних механизмов вью, и он позволяет более правильно обновлять все эти элементы. 
+      в качестве ключа должно быть что-то уникальное, у нас это идентификатор информационного блока -->
+      <!-- look-at как и у камеры. только здесь мы из нулевых координат вычитаем координаты инфоблока и нормализуем.
+       таким образом мы получаем направление, в котором должна смотреть наш Mesh -->
+       <!-- position позиция вычисляется в зависимости от координат x и y(как в бд хранятся). снова переходим к сферической системе координат -->
+        <!-- click, то есть открывается при нажатии на него -->
     <TresMesh
       v-for="infoBlock in infoBlocks"
       :key="infoBlock.idInfoBlock"
@@ -242,7 +275,9 @@ const onBackButtonClick = () => {
       :position="getPosition(infoBlock.coordX, infoBlock.coordY)"
       @click="onInfoClick(infoBlock.idInfoBlock)"
     >
+    <!-- плоская геометрия размером 30 на 30 -->
       <TresPlaneGeometry :args="[30, 30]"></TresPlaneGeometry>
+      <!-- точно также натягивается материал, у которого прозрачный фон(transparent) и одна только текстура(map), которая представляет собои изображение кнопки -->
       <TresMeshBasicMaterial transparent :map="btnInfoMap"></TresMeshBasicMaterial>
     </TresMesh>
 
@@ -302,6 +337,7 @@ const onBackButtonClick = () => {
   position: relative;
 }
 
+/* отвечает за загрузку(три точки) */
 .loader {
   position: absolute;
   top: 50%;

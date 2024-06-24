@@ -14,12 +14,14 @@ import EditAdmin from './pages/edit-admin/EditAdmin.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 
+// эскпортирует пути, содержит массивы объектов, в обектах указаны пути и название компонентов
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: Home
   },
   {
+    // двоеточие обозначает то, что на этом месте будет параметр маршрута, то есть изменяющийся
     path: '/organization/:id',
     children: [
       {
@@ -27,6 +29,7 @@ export const routes: RouteRecordRaw[] = [
         component: TourUser
       },
       {
+        // '' подменяем странице целиком, чтобы не было вложенных роутер-вью
         path: '',
         component: Organization
       }
@@ -34,7 +37,9 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/admin',
+    // метаданные для ограничения доступа к различным страницам
     meta: {
+      // требует авторизации
       requiresAuth: true
     },
     redirect: '/admin/organizations',

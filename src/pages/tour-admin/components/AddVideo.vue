@@ -70,7 +70,7 @@ const error = ref('')
 h1 {
   display: flex; /* элементы в блок */
   font-size: 36px; /* рамзер текста */
-  padding-bottom: 20px; /* отступ снизу */
+  padding-bottom: 30px; /* отступ снизу */
   margin: 0%; /* нет внутренних отступов */
   color: #fff; /* цвет текста */
   justify-content: center; /* элементы по центру */
@@ -79,8 +79,8 @@ h1 {
 input {
   width: 100%; /* ширина */
   height: 100%; /* высота */
-  margin-bottom: 20px; /* шиотступ снизурина */
-  color: #2d2d2d; /* цвет текста */
+  margin-bottom: 30px; /* шиотступ снизурина */
+  color: #fff; /* цвет текста */
   font-family: Rubik, sans-serif; /* шрифт */
 }
 

@@ -7,10 +7,12 @@ export const getOrganizations = async (): Promise<IOrganization[]> => {
 }
 
 export const getOrganization = async (id: number): Promise<IOrganization> => {
+  // вызываем метод гет с нужным путём
   const response = await axiosInstance.get(`${import.meta.env.VITE_API_URL}/organization/${id}`)
   return response.data
 }
 
+// data-место куда вставляется body(как в постмане)
 export const createOrganization = async (data: FormData): Promise<IOrganization> => {
   const response = await axiosInstance.post(`${import.meta.env.VITE_API_URL}/organization`, data)
   return response.data

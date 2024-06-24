@@ -12,14 +12,18 @@ const props = defineProps<Props>()
 const router = useRouter()
 
 const onClick = () => {
+  // вставляем в роутер ссылку, таким образом мы меняем текующий открытый маршрут
   router.push(props.link)
 }
 </script>
 
 <template>
+  <!-- $ для того, чтобы дать понять, где мы в строку встраиваем значение переменной -->
   <div class="wrap" :style="`background-image: url('${imgSrc}');`">
     <div class="content wrap-content">
+      <!-- двойные скобки для подставления -->
       <h1>{{ name }}</h1>
+      <!-- @-обозначаются события и прописывается его обработчик -->
       <button @click="onClick">Посетить</button>
     </div>
   </div>

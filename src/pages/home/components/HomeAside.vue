@@ -9,6 +9,7 @@ const onClick = () => {
 </script>
 
 <template>
+ <div class="wrapper">
   <div class="wrap">
     <div class="content">
       <h1>Дополни свою реальность</h1>
@@ -25,12 +26,15 @@ const onClick = () => {
       <source src="/src/assets/bg.mp4" type="video/mp4" />
     </video>
   </div>
+ </div>
 </template>
 
 <style scoped>
+.wrapper {
+  position: relative;
+}
+
 .wrap {
-  padding: 180px 0px;
-  /* отступы сверху\снизу */
   position: absolute;
   top: 50%;
   left: 50%;

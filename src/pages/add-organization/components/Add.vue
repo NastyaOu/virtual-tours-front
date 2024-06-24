@@ -23,39 +23,51 @@ const isAddBoxOpen = ref(false)
 
 const error = ref('')
 
+// при нажатии добавить открывается окно(isAddBoxOpen)
 const onAddBtnClick = () => {
   error.value = ""
-
+ 
+  // если поля имя или описание или история или изображение пустые то выводим ошибку
   if (name.value.trim() === "" || description.value.trim() === "" || history.value.some(historyEl => historyEl.trim() === "")|| !fileInput.value.files[0]) {
     error.value = 'Заполните все поля'
     return
   }
-
+// иначе проходим дальше и открываем модальное окно
   isAddBoxOpen.value = true
 }
 
+// при нажатии на отменить происходит переход на стр организаций
 const onCancelBtnClick = () => {
   router.push('/admin/organizations')
 }
 
+// при закрытии окна формируем оъект FormData(body)
 const onAddBoxClose = (result: boolean) => {
+  // закрываем модальное окно
   isAddBoxOpen.value = false
 
+  // если ошибка, то продолжаем создание организации
   if (!result) return
 
+  // создаем параметр с типом FormData, в которой будет body
   const formData = new FormData()
 
+  
   formData.append('name', name.value)
   formData.append('description', description.value)
-  formData.append('history', JSON.stringify(history.value))
+  formData.append('history', JSON.stringify(history.value)) 
+  // перед отправкой запроса в FormData, мы добавим файловый инпут, его значение и первый из файлов
   formData.append('image', fileInput.value.files[0])
 
+  // затем вызовем функцию createOrganization для создания организации с данными организации
   createOrganization(formData).catch((err) => {
+    // эррор для незаполненных полей
     error.value = err.response.data
   })
 
   if (error.value.length) return
 
+  // если ошибки нет, то возврат на страницу организаций
   router.push('/admin/organizations')
 }
 </script>
@@ -78,6 +90,7 @@ const onAddBoxClose = (result: boolean) => {
           <div class="items">
             <input type="text" v-model="history[0]" />
             <div v-for="(historyEl, index) of history.slice(1, history.length)" class="item">
+              <!-- v-model обеспечивает двустороннюю привязку данных; при изменении данных в нем(в инпуте), они отобразятся в родителе add (const history = ref(['']))-->
               <input type="text" v-model="history[index + 1]" />
               <img src="/src/assets/close.svg" @click="onDelHistoryBtnClick(index + 1)" />
             </div>
@@ -91,6 +104,7 @@ const onAddBoxClose = (result: boolean) => {
         <div class="item">
           <label>Изображение</label>
           <div class="item">
+            <!-- v-model для файлов не существует, реф-это как бы айди, который обновляется -->
             <input ref="fileInput" type="file" />
           </div>
         </div>
@@ -105,6 +119,7 @@ const onAddBoxClose = (result: boolean) => {
     </div>
   </aside>
 
+  <!-- v-if делаем его видимость зависимость от переменной isAddBoxOpen(т.е. если оно открыто)-->
   <ConfirmAddBox v-if="isAddBoxOpen" @close="onAddBoxClose"></ConfirmAddBox>
 </template>
 
@@ -157,9 +172,15 @@ input {
   display: flex; /* элементы в блок */
   flex-direction: row; /* элементы в строку */
   gap: 5px; /* отступ между элементами */
+
+  position: relative;
 }
 
 .items .item > img {
+  position: absolute;
+  left: calc(100% + 5px);
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
 }
 

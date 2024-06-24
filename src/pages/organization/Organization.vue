@@ -8,6 +8,7 @@ import { getOrganization } from '@/services/organization-service'
 import { useRoute } from 'vue-router'
 import { getFileName } from '@/helpers'
 
+// ref-ссылка=реактивная переменная(могут изменяться в коде)
 const organization = ref<IOrganization>({
   description: '',
   history: [],
@@ -16,10 +17,14 @@ const organization = ref<IOrganization>({
   name: ''
 })
 
+// получаем текущий путь
 const route = useRoute()
 
+// получаем одну организацию и в качестве параметра передаем id
+// onMounted-когда компонент полностью отрисован,встроен в страницу и им можно пользоваться
 onMounted(() => {
   getOrganization(Number(route.params.id)).then((res) => {
+    // записываем то, что пришло с бэка
     organization.value = res
   })
 })
@@ -30,8 +35,11 @@ onMounted(() => {
 
   <OrganizationHistory :history="organization.history" />
 
+  <!-- двоеточие для использования параметров из кода, для реактивных(могут изменяться в коде) то же самое -->
+   <!-- получаем ссылку, название организации и путь до медиа -->
+    <!-- путь формируется функцией getFileName -->
   <OrganizationItem
-    :link="`/organization/${route.params.id}/tour`"
+    :link="`/organization/${route.params.id}/tour`" 
     :name="organization!.name"
     :img-src="getFileName(organization!.image)"
   />

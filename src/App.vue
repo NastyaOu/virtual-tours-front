@@ -7,8 +7,10 @@ import Header from './pages/shared/Header.vue'
   <div class="layout">
     <Header></Header>
     <main>
-      <Suspense>
-        <router-view></router-view>
+      <!-- для асинхронных операций, для запросов к серверу -->
+      <Suspense> 
+        <!-- в зависимости от действий пользователя выдет контент, смотрит на текущую откурутю ссылку -->
+        <router-view></router-view> 
       </Suspense>
     </main>
     <Footer></Footer>
@@ -72,9 +74,10 @@ main {
   flex: 1 0 auto;
 }
 
-input {
+input:not([type="radio"]) {
   padding: 0 10px;
-
+  width: 920px;
+  height: 24px; 
   border: 1px solid #2d2d2d; /* цвет */
 }
 
@@ -84,5 +87,6 @@ input:focus {
 
 input[type="file"] {
   border: none;
+  padding: 0%;
 }
 </style>

@@ -22,7 +22,7 @@ defineProps<Props>()
 
 <style scoped>
 .history {
-  padding: 60px 0px; /* отступы сверху\снизу */
+  padding: 0px 0px 60px; /* отступы сверху\снизу */
 }
 
 h1 {

@@ -20,6 +20,7 @@ const onClose = () => {
     <div class="btn">
       <img src="/src/assets/close2.svg" @click="onClose" />
     </div>
+    <!-- подставляем в качестве фона -->
     <div class="image" :style="`background-image: url('${src}');`"></div>
   </div>
 </template>
